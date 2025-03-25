@@ -1,8 +1,9 @@
-import Header from "../../components/header"
+import HomeComponent from "../../components/home"
+
 const Home =()=>{
     return(
         <div className="home">
-            <Header/>
+             <HomeComponent/>
             
         </div>
     )

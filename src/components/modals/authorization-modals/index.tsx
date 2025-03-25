@@ -2,17 +2,22 @@ import { Modal } from "antd";
 import Login from "./login";
 import Register from "./register";
 import { useState } from "react";
-import { useReduxSelector,useReduxDispatch } from "../../../hooks/useRedux";
+import { useReduxSelector, useReduxDispatch } from "../../../hooks/useRedux";
+import { setModalAuthorizationModalVisibility } from "../../../redux/modalSlice";
 
 const AuthorizationModal = () => {
   const { modalAuthorizationVisibility } = useReduxSelector(
     (state) => state.modalSlice
   );
-  const dispatch = useReduxDispatch()
+  const dispatch = useReduxDispatch();
   const [active, setActive] = useState(true);
   return (
     <>
-      <Modal open={modalAuthorizationVisibility} footer={false}>
+      <Modal
+        open={modalAuthorizationVisibility}
+        onCancel={() => dispatch(setModalAuthorizationModalVisibility())}
+        footer={false}
+      >
         <div>
           <div className="flex items-center justify-center gap-7 mt-7">
             <h3
