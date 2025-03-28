@@ -1,4 +1,5 @@
-import { Skeleton } from "antd";
+import { Skeleton} from "antd";
+
 import { FC } from "react";
 
 
@@ -97,3 +98,4 @@ export const DiscountLoader = () => {
 };
 
  
+
