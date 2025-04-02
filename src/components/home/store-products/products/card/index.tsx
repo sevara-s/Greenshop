@@ -2,9 +2,14 @@ import { FC } from "react"
 import { CartType } from "../../../../../@types";
 import { ShoppingCartOutlined, HeartOutlined, SearchOutlined } from "@ant-design/icons"
 import { useNavigate } from "react-router-dom";
+import { useReduxDispatch } from "../../../../../hooks/useRedux";
+import { addData } from "../../../../../redux/modalSlice/shopSlice";
+import notificationApi from "../../../../../generics/notification";
 
 const Card: FC<CartType> = (props) => {
   const navigate =useNavigate()
+  const dispatch = useReduxDispatch()
+  const {notify} = notificationApi()
   return (
     <div className="flex flex-col gap-[8px] xs:gap-[10px] mt-4 xs:mt-6 w-full group/card relative">
       <div className="h-[200px] xs:h-[250px] sm:h-[300px] md:h-[350px] bg-[#f0f0f0] flex justify-center items-center transition-all duration-700 relative group overflow-hidden rounded-lg 
@@ -18,7 +23,10 @@ const Card: FC<CartType> = (props) => {
         />
 
         <div className="absolute bottom-[10px] xs:bottom-[15px] sm:bottom-[20px] flex items-center gap-[8px] xs:gap-[12px] sm:gap-[15px] opacity-0 translate-y-5 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
-          <button className="text-[18px] xs:text-[20px] sm:text-[24px] text-[#3D3D3D] hover:text-[#46A358] w-[36px] xs:w-[42px] sm:w-[48px] h-[36px] xs:h-[42px] sm:h-[48px] bg-white rounded-md flex items-center justify-center shadow-md hover:shadow-lg transition-all">
+          <button onClick={()=>{
+            dispatch(addData(props))
+            notify("add-data")
+            }} className="text-[18px] xs:text-[20px] sm:text-[24px] text-[#3D3D3D] hover:text-[#46A358] w-[36px] xs:w-[42px] sm:w-[48px] h-[36px] xs:h-[42px] sm:h-[48px] bg-white rounded-md flex items-center justify-center shadow-md hover:shadow-lg transition-all">
             <ShoppingCartOutlined />
           </button>
 

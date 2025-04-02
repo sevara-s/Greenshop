@@ -121,3 +121,23 @@ export interface CommentType {
     avatar?: string;
   };
 }
+export interface CouponType {
+  code: string;
+  discount_for: number;
+  id: number;
+  title: string;
+}
+export interface MakeOrderType {
+  name: string;
+  surname: string;
+  country: string;
+  street: string;
+  state: string;
+  email: string;
+  zip: string;
+  appartment: string;
+  town: string;
+  phone_number: string;
+  comment: string;
+  payment_method: string;
+}

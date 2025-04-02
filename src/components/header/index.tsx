@@ -12,10 +12,10 @@ import {
 import { useReduxDispatch } from "../../hooks/useRedux";
 import { setModalAuthorizationModalVisibility } from "../../redux/modalSlice";
 import { useAxios } from "../../hooks/useAxios";
-import notificationApi from "../../generics/notification";
 import { Link } from "react-router-dom";
 import logo from "../../assets/svgs/logo.svg";
 import { cookieInfo } from "../../generics/cookies";
+import { useReduxSelector } from "../../hooks/useRedux";
 
 const Header = () => {
   const dispatch = useReduxDispatch();
@@ -26,8 +26,15 @@ const Header = () => {
   const [username, setUsername] = useState<string | null>(null);
 
   const axios = useAxios();
-  const { notify } = notificationApi();
-  const { getCookie, setCookie, removeCookie } = cookieInfo();
+  const { getCookie, removeCookie } = cookieInfo();
+    const { data } = useReduxSelector((state) => state.shopSlice);
+
+  const navRoutes = [
+    { path: "/", label: "Home" },
+    { path: "/shop", label: "Shop" },
+    { path: "/blog", label: "Blog" },
+    
+  ];
 
   useEffect(() => {
     const token = getCookie("auth_token");
@@ -65,7 +72,7 @@ const Header = () => {
   return (
     <header className="header p-4 border-b border-[#96d7a3] bg-white sticky top-0 z-50">
       <div className="container mx-auto flex items-center justify-between">
-        {/* Logo and Main Menu Button - Grouped Together */}
+        {/* Logo and Mobile Menu Button */}
         <div className="flex items-center gap-5">
           <MenuOutlined
             className="!text-[22px] cursor-pointer md:hidden !text-[#46a358]"
@@ -76,7 +83,6 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Filter Button - Separate on the Left */}
         <div className="md:hidden">
           <FilterOutlined
             className="!text-[22px] cursor-pointer !text-[#46a358]"
@@ -84,9 +90,8 @@ const Header = () => {
           />
         </div>
 
-        {/* Navigation Menu */}
         <nav
-          className={`fixed top-0 left-0 h-full w-[80%] max-w-[300px] bg-[#46a358] p-5 transform transition-transform duration-300 md:relative md:flex md:items-center md:w-auto md:p-0 md:translate-x-0 md:bg-transparent ${
+          className={`fixed top-0 left-0 h-full w-[80%] max-w-[300px] bg-[#46a358] p-5 transform transition-transform duration-300 z-50 overflow-y-auto md:relative md:flex md:items-center md:w-auto md:p-0 md:translate-x-0 md:bg-transparent md:overflow-visible ${
             menuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -95,21 +100,18 @@ const Header = () => {
             onClick={() => setMenuOpen(false)}
           />
           <div className="flex flex-col gap-2 md:flex-row md:gap-6">
-            {["/", "/shop", "/blog"].map((path) => (
+            {navRoutes.map((route) => (
               <Link
-                key={path}
-                to={path}
+                key={route.path}
+                to={route.path}
                 className={`cursor-pointer py-2 px-4 text-sm sm:text-base ${
-                  pathname === path
+                  pathname === route.path
                     ? "font-bold md:text-[#46a358] md:bg-transparent bg-[#3c8b4e] text-white"
                     : "md:text-gray-700 text-white opacity-90 hover:bg-[#3c8b4e] md:hover:bg-transparent md:hover:text-[#46a358] hover:opacity-100"
                 } rounded-md transition-all duration-300 ease-in-out`}
-                onClick={() => handleNavClick(path)}
+                onClick={() => handleNavClick(route.path)}
               >
-                {path === "/"
-                  ? "Home"
-                  : path.replace("/", "").charAt(0).toUpperCase() +
-                    path.slice(2)}
+                {route.label}
               </Link>
             ))}
           </div>
@@ -117,7 +119,7 @@ const Header = () => {
 
         {/* Filter Panel */}
         <div
-          className={`fixed top-0 right-0 h-full w-[80%] max-w-[300px] bg-white p-5 shadow-lg transform transition-transform duration-300 ${
+          className={`fixed top-0 right-0 h-full w-[80%] max-w-[300px] bg-white p-5 shadow-lg transform transition-transform duration-300 z-40 ${
             filterOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -167,11 +169,12 @@ const Header = () => {
           </div>
         </div>
 
+        {/* Desktop Icons and Login */}
         <div className="hidden md:flex items-center gap-3 sm:gap-5">
           <SearchOutlined className="!text-[22px] sm:!text-[25px] cursor-pointer text-[#46a358]" />
 
-          <button onClick={() => handleNavClick("/shop")}>
-            <Badge count={0} showZero>
+          <button onClick={() => handleNavClick("/products-shop")}>
+            <Badge count={data.length} showZero>
               <ShoppingCartOutlined className="!text-[22px] sm:!text-[25px] cursor-pointer text-[#46a358]" />
             </Badge>
           </button>
@@ -185,9 +188,10 @@ const Header = () => {
           </Button>
         </div>
 
+        {/* Overlay for Mobile */}
         {(menuOpen || filterOpen) && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-30 md:hidden"
+            className="fixed inset-0 bg-black bg-opacity-30 z-30 md:hidden"
             onClick={() => {
               setMenuOpen(false);
               setFilterOpen(false);

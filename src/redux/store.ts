@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { setModalAuthorizationModalVisibility } from "./modalSlice";
 import modalSlice from "./modalSlice"
+import couponSlice from "./coupon-slice"
 
-
+import shopSlice from "./modalSlice/shopSlice"
  export const store = configureStore({
     reducer:{
-        modalSlice
+        modalSlice,
+        shopSlice,
+        couponSlice
     },
 
 })

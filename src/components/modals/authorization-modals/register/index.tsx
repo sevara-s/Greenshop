@@ -7,15 +7,16 @@ import { useRegisterMutate, useRegisterWithGoogle } from "../../../../hooks/useQ
 
 interface RegisterData {
   name: string;
+  surname: string; // Added surname field
   email: string;
   password: string;
   confirmPassword: string;
 }
 
 const Register = () => {
-
-  const {mutate:registerMutate} =  useRegisterWithGoogle()
+  const { mutate: registerMutate } = useRegisterWithGoogle();
   const refName = useRef<InputRef>(null);
+  const refSurname = useRef<InputRef>(null); // Added surname ref
   const refEmail = useRef<InputRef>(null);
   const refPassword = useRef<InputRef>(null);
   const refConfirmPassword = useRef<InputRef>(null);
@@ -36,13 +37,13 @@ const Register = () => {
 
     const data: RegisterData = {
       name: refName.current?.input?.value || "",
+      surname: refSurname.current?.input?.value || "", // Added surname
       email: refEmail.current?.input?.value || "",
       password,
       confirmPassword,
     };
 
     mutate(data);
-    console.log("Register Data:", data);
   };
 
   return (
@@ -50,31 +51,45 @@ const Register = () => {
       <p className="pt-4">Enter your username and password to register</p>
       <div className="w-[90%]">
         <form onSubmit={register} className="mt-2 flex flex-col gap-5">
-          <Input
-            ref={refName}
-            type="text"
-            name="name"
-            className="border-[#EAEAEA] h-[48px] hover:border-[#46A358] focus:border-[#46A358] !bg-transparent"
-            placeholder="Enter your name"
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              ref={refName}
+              type="text"
+              name="name"
+              className="border-[#EAEAEA] h-[48px] hover:border-[#46A358] focus:border-[#46A358] !bg-transparent"
+              placeholder="First name"
+              required
+            />
+            <Input
+              ref={refSurname}
+              type="text"
+              name="surname"
+              className="border-[#EAEAEA] h-[48px] hover:border-[#46A358] focus:border-[#46A358] !bg-transparent"
+              placeholder="Last name"
+              required
+            />
+          </div>
           <Input
             ref={refEmail}
-            type="text"
+            type="email"
             name="email"
             className="border-[#EAEAEA] h-[48px] hover:border-[#46A358] focus:border-[#46A358] !bg-transparent"
             placeholder="Enter your email"
+            required
           />
           <Input.Password
             ref={refPassword}
             type="password"
             className="border-[#EAEAEA] h-[48px] hover:border-[#46A358] focus:border-[#46A358] !bg-transparent"
             placeholder="Enter your password"
+            required
           />
           <Input.Password
             ref={refConfirmPassword}
             type="password"
             className="border-[#EAEAEA] h-[48px] hover:border-[#46A358] focus:border-[#46A358] !bg-transparent"
             placeholder="Confirm your password"
+            required
           />
           <Button
             htmlType="submit"
@@ -92,7 +107,10 @@ const Register = () => {
         </div>
 
         <div className="flex flex-col gap-[10px]">
-          <button onClick={()=>registerMutate()} className="border h-[40px] rounded-md flex items-center justify-center gap-3 mb-4 cursor-pointer w-full">
+          <button 
+            onClick={() => registerMutate()} 
+            className="border h-[40px] rounded-md flex items-center justify-center gap-3 mb-4 cursor-pointer w-full"
+          >
             <img src={google} alt="google" />
             Register with Google
           </button>

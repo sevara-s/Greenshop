@@ -1,17 +1,15 @@
 import Cookies from "js-cookie";
 
 export const cookieInfo = () => {
-  const getCookie = (key: string): string | undefined => {
-    return Cookies.get(key);
+  const getCookie = (key: string) => {
+    return Cookies.get(key) ? JSON.parse(Cookies.get(key) as string) : null;
   };
 
-  const setCookie = (key: string, data: string, days = 7): void => {
-    Cookies.set(key, data, { expires: days });
+  const setCookie = (key: string, data: object) => {
+    return Cookies.set(key, JSON.stringify(data));
   };
 
-  const removeCookie = (key: string): void => {
-    Cookies.remove(key);
-  };
+  const isAuthorization = getCookie("user") ? true : false;
 
-  return { getCookie, setCookie, removeCookie };
+  return { getCookie, isAuthorization, setCookie };
 };
